@@ -6,7 +6,7 @@ using ETouch = UnityEngine.InputSystem.EnhancedTouch;
 public class PlayerControls : MonoBehaviour
 {
     [SerializeField]
-    private Vector2 JoystickSize = new Vector2(300, 300);
+    private Vector2 JoystickSize = new Vector2(50, 5);
     [SerializeField]
     private FloatingJoystick Joystick;
 
@@ -16,6 +16,8 @@ public class PlayerControls : MonoBehaviour
     Vector3 _velocity = Vector3.zero;
 
     [SerializeField] float _moveSpeed;
+    [SerializeField] float jumpSpeed;
+    bool canDoubleJump;
 
     private Finger MovementFinger;
     private Vector2 MovementAmount;
@@ -116,7 +118,7 @@ public class PlayerControls : MonoBehaviour
 
         Vector3 scaledMovement =  new Vector3(
            MovementAmount.x * _moveSpeed,
-           _velocity.y += gravity * Time.deltaTime,
+           _velocity.y -= gravity * Time.deltaTime,
            0
        );
 
@@ -145,6 +147,24 @@ public class PlayerControls : MonoBehaviour
         }
 
         GUI.Label(new Rect(10, 10, 500, 20), $"Screen Size ({Screen.width}, {Screen.height})", labelStyle);
+    }
+
+    public void Jump()
+    {
+        
+        if (characterController.isGrounded)
+        {
+            _velocity.y = jumpSpeed;
+            canDoubleJump = true;
+        }
+        else
+        {
+            if (canDoubleJump)
+            {
+                _velocity.y = jumpSpeed;
+                canDoubleJump = false;
+            }
+        }
     }
 }
 
